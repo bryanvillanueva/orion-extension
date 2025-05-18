@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orion AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="orion-popup">
+    <div id="orion-header">
+      <img src="https://bryanglen.com/orion/orion-white.png" alt="Orion AI Logo" />
+    </div>
+
+    <div id="login-container">
+      <h3 id="popup-title">Iniciar sesión en Orion</h3>
+      
+      <div id="login-form">
+        <div class="form-group">
+          <input type="email" id="userEmail" placeholder="Correo electrónico" required aria-label="Correo electrónico" />
+          <div id="emailError" class="error-message" hidden></div>
+        </div>
+        
+        <div class="form-group">
+          <input type="password" id="userPassword" placeholder="Contraseña" required aria-label="Contraseña" />
+          <div id="passwordError" class="error-message" hidden></div>
+        </div>
+        
+        <button id="loginBtn" type="submit">
+          <span>Iniciar sesión</span>
+        </button>
+        
+        <div class="form-options">
+          <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <div class="divider">
+          <span>O continuar con</span>
+        </div>
+
+        <button id="loginGoogle" type="button">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
+               alt="Logo de Google" class="icon-gmail" />
+          <span>Google</span>
+        </button>
+      </div>
+
+      <div id="user-account">
+        <div class="user-info-box">
+          <span id="userEmailDisplay"></span>
+        </div>
+        <button id="logoutBtn">Cerrar sesión</button>
+      </div>
+    </div>
+
+      <div id="user-setup-form" style="display: none; padding: 20px;">
+  <h3>Completa tu perfil</h3>
+
+  <input type="text" id="fullName" placeholder="Nombre completo" required />
+  <input type="text" id="username" placeholder="Nombre de usuario" required />
+  <input type="email" id="emailContact" placeholder="Correo de contacto" required />
+
+  <button id="saveProfileBtn">Guardar información</button>
+</div>
+    
+    <div id="popup-footer">
+      <p>Selecciona texto en cualquier página para usar Orion</p>
+    </div>
+  </div>
+
+
+
+  <script src="popup.js"></script>
+</body>
+</html>

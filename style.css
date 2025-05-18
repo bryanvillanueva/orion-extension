@@ -1,0 +1,613 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #000000;
+  --secondary-color: #f5f5f5;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --border-radius: 8px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  padding: 0;
+  width: 320px;
+  margin: 0;
+  background: #fff;
+  color: var(--text-primary);
+}
+
+#orion-popup {
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+#orion-header {
+  background: #000000;
+  color: #fff;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+}
+
+#orion-header img {
+  height: 30px;
+  margin-right: 10px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  transition: var(--transition);
+}
+
+#orion-header img:hover {
+  transform: scale(1.05);
+}
+
+#login-container {
+  padding: 25px;
+  flex-grow: 1;
+  background: #fff;
+}
+
+h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #000000;
+  font-size: 18px;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 18px;
+  border: 1px solid #e1e1e1;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background: var(--secondary-color);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  transition: var(--transition);
+}
+
+input:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: var(--transition);
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover {
+  background: #333333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+#loginBtn {
+  margin-bottom: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+#loginBtn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+#loginBtn:focus:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(25, 25);
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
+  }
+}
+
+#user-account {
+  display: none;
+  text-align: center;
+  background: var(--secondary-color);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-top: 15px;
+}
+
+#user-account p {
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  word-break: break-all;
+  background: #fff;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+#login-form {
+  display: block;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+#loginGoogle {
+  background: #fff;
+  color: var(--text-primary);
+  border: 1px solid #e1e1e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 400;
+}
+
+#loginGoogle:hover {
+  background: #f8f8f8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon-gmail {
+  width: 20px;
+  height: 20px;
+}
+
+#popup-footer {
+  background: var(--secondary-color);
+  padding: 15px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-top: 1px solid #eee;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#login-container {
+  animation: fadeIn 0.4s ease-out;
+}
+
+input::placeholder {
+  color: #aaa;
+  font-weight: 300;
+}
+
+/* Focus states for accessibility */
+button:focus,
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Error state for inputs */
+input.error {
+  border-color: #ff3860;
+  background-color: #fff;
+}
+
+.error-message {
+  color: #ff3860;
+  font-size: 12px;
+  margin-top: -12px;
+  margin-bottom: 12px;
+}
+
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.8);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  color: #000;
+  font-size: 14px;
+}
+
+.loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #000;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.user-info-box {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+#popup-title {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Estilos para el sistema de plantillas de Orion */
+
+/* Vistas y navegación */
+.orion-view {
+  padding: 16px;
+  overflow-y: auto;
+  max-height: calc(90vh - 60px);
+}
+
+.orion-view-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.orion-view-header h3 {
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.orion-back-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 5px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  transition: var(--transition);
+}
+
+.orion-back-btn:hover {
+  color: var(--text-primary);
+  transform: translateX(-2px);
+}
+
+/* Lista de plantillas */
+#orion-templates-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#orion-templates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: var(--border-radius);
+  padding: 10px;
+}
+
+.orion-template-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  background-color: var(--secondary-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.orion-template-item:hover {
+  background-color: #ebebeb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.orion-template-item.selected {
+  background-color: #e3e3e3;
+  border-left: 3px solid var(--primary-color);
+}
+
+.orion-template-info {
+  flex-grow: 1;
+}
+
+.orion-template-title {
+  font-weight: 500;
+  margin-bottom: 3px;
+  font-size: 14px;
+}
+
+.orion-template-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.orion-template-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.orion-template-actions button {
+  background: none;
+  border: none;
+  padding: 3px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  border-radius: 4px;
+}
+
+.orion-template-actions button:hover {
+  background-color: #e1e1e1;
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.orion-templates-empty {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 300;
+}
+
+/* Formulario de edición de plantillas */
+#orion-template-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.orion-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.orion-form-group label {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.orion-form-group input,
+.orion-form-group textarea {
+  padding: 12px 15px;
+  border: 1px solid #e1e1e1;
+  border-radius: var(--border-radius);
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--secondary-color);
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.orion-form-group input:focus,
+.orion-form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+.orion-form-group textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.orion-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Variables y ayudas */
+#orion-template-variables-info {
+  background-color: var(--secondary-color);
+  border-radius: var(--border-radius);
+  padding: 12px;
+  margin-top: 10px;
+  box-shadow: var(--shadow);
+}
+
+#orion-template-variables-info h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+#orion-template-variables-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+#orion-template-variables-info li {
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: var(--text-secondary);
+}
+
+#orion-template-variables-info code {
+  background-color: #ebebeb;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+/* Vista previa de plantillas */
+#orion-template-preview {
+  margin-bottom: 16px;
+}
+
+#orion-template-preview label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+#orion-template-preview-content {
+  background-color: var(--secondary-color);
+  border: 1px solid #e1e1e1;
+  border-radius: var(--border-radius);
+  padding: 15px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+/* Botones principales */
+.orion-primary-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.orion-primary-btn:hover {
+  background-color: #333333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.orion-primary-btn:active {
+  transform: translateY(0);
+}
+
+.orion-secondary-btn {
+  background-color: var(--secondary-color);
+  color: var(--text-primary);
+  border: 1px solid #e1e1e1;
+  border-radius: var(--border-radius);
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orion-secondary-btn:hover {
+  background-color: #f8f8f8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#user-setup-form {
+  display: none;
+  padding: 20px;
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+
+#user-setup-form input {
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+}

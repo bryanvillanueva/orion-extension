@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Orion AI Assistant",
+  "version": "1.0",
+  "description": "Genera respuestas con IA o reescribe textos con un tono profesional.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+"permissions": [
+  "storage",
+  "activeTab",
+  "scripting",
+  "https://orion-production-5768.up.railway.app/"
+],
+"host_permissions": [
+  "https://orion-production-5768.up.railway.app/"
+],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["modal.html", "modal.css", "icon.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

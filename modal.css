@@ -1,0 +1,525 @@
+/* modal.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+:root {
+  --orion-black: #000;
+  --orion-white: #fff;
+  --orion-green: #0cf57e;
+  --orion-gray-light: #f8f8f8;
+  --orion-gray: #eee;
+  --orion-gray-dark: #666;
+}
+
+#orion-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  padding: 15px; /* Padding para evitar que el modal toque los bordes */
+}
+
+#orion-modal {
+  background: var(--orion-white);
+  color: var(--orion-black);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px; /* Tamaño máximo para escritorio */
+  max-height: 90vh; /* Altura máxima del 90% de la ventana */
+  overflow-y: auto; /* Permitir scroll si el contenido es muy largo */
+  box-shadow: 0 0 15px rgba(0,0,0,0.25);
+  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+#orion-header {
+  background: var(--orion-black);
+  color: var(--orion-white);
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; /* Mantener visible al hacer scroll */
+  top: 0;
+  z-index: 1;
+}
+
+#orion-header img {
+  height: 26px;
+}
+
+#orion-header h2 {
+  flex: 1;
+  margin: 0 10px;
+  font-weight: 500;
+  font-size: 18px; /* Tamaño reducido */
+}
+
+#orion-close {
+  cursor: pointer;
+  font-size: 24px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#orion-body {
+  padding: 15px;
+  overflow-y: auto; /* Permitir scroll si es necesario */
+  flex: 1;
+}
+
+#orion-body label {
+  display: block;
+  margin: 10px 0 5px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Solución del problema responsive para el input de instrucción */
+#orion-selected-text,
+#orion-result,
+#orion-user-instruction {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 10px;
+  box-sizing: border-box; /* Añadido para evitar que el padding aumente el ancho total */
+  max-width: 100%; /* Asegura que no exceda el ancho del contenedor */
+  overflow-x: hidden; /* Evita la barra de desplazamiento horizontal */
+}
+
+#orion-user-instruction {
+  resize: none; /* Evita que el usuario pueda redimensionar el input */
+  min-height: 38px; /* Altura fija para el input */
+}
+
+#orion-selected-text,
+#orion-result {
+  resize: vertical;
+  max-height: 150px; /* Limitar altura máxima */
+}
+
+#orion-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+/* Incorporación del nuevo color verde a los botones principales */
+#orion-buttons button {
+  flex: 1 1 calc(50% - 8px); /* 2 botones por fila en pantallas medianas */
+  padding: 10px;
+  background: var(--orion-black);
+  color: var(--orion-white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 13px; /* Tamaño reducido */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de hover con borde verde */
+#orion-buttons button:hover {
+  box-shadow: 0 0 0 2px var(--orion-green);
+  transform: translateY(-2px);
+}
+
+/* Botón de plantilla con color verde */
+#orion-template-btn {
+  background: linear-gradient(to right, var(--orion-black), var(--orion-black)) !important;
+  position: relative;
+}
+
+#orion-template-btn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--orion-green);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+#orion-template-btn:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+#orion-action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+#orion-copy,
+#orion-insert,
+#orion-translate {
+  flex: 1;
+  padding: 10px;
+  color: var(--orion-white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#orion-copy, 
+#orion-insert {
+  background: var(--orion-black);
+}
+
+/* Botón de traducir con el color verde */
+#orion-translate {
+  background: var(--orion-green);
+  color: var(--orion-black);
+  font-weight: 500;
+}
+
+#orion-copy:hover,
+#orion-insert:hover {
+  background: #333;
+  box-shadow: 0 0 0 2px var(--orion-green);
+}
+
+#orion-translate:hover {
+  background: #0ae070; /* Versión más clara del verde */
+  box-shadow: 0 0 10px rgba(12, 245, 126, 0.5);
+}
+
+#orion-translate:disabled {
+  background: #ccc;
+  color: #777;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+#orion-insert:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+#orion-result-container {
+  margin-top: 15px;
+}
+
+#orion-result {
+  min-height: 100px;
+}
+
+/* Responsive para móviles */
+@media (max-width: 480px) {
+  #orion-modal {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+  
+  #orion-buttons button {
+    flex: 1 1 100%; /* 1 botón por fila en móviles */
+  }
+  
+  #orion-header h2 {
+    font-size: 16px;
+  }
+  
+  #orion-header img {
+    height: 20px;
+  }
+  
+  #orion-body {
+    padding: 10px;
+  }
+  
+  #orion-action-buttons {
+    flex-direction: column;
+  }
+  
+  /* Asegurar que el input no genere scroll horizontal en móviles */
+  #orion-user-instruction {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) and (min-width: 481px) {
+  #orion-modal {
+    max-width: 90%;
+  }
+  
+  #orion-buttons button {
+    flex: 1 1 calc(50% - 8px); /* 2 botones por fila */
+  }
+}
+
+/* Responsive para pantallas medianas */
+@media (max-width: 1024px) and (min-width: 769px) {
+  #orion-modal {
+    max-width: 70%;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+#orion-selected-text-container {
+  display: flex;
+  align-items: center;
+  background: var(--orion-gray-light);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+#orion-selected-text-preview {
+  flex-grow: 1;
+  padding: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  color: #555;
+  min-height: 20px;
+}
+
+#orion-selected-text-preview.expanded {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#orion-toggle-text {
+  background: none;
+  border: none;
+  border-left: 1px solid #ddd;
+  padding: 8px;
+  height: 36px;
+  cursor: pointer;
+  color: #555;
+  transition: background 0.2s;
+}
+
+#orion-toggle-text:hover {
+  background: var(--orion-gray);
+}
+
+#orion-result {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 10px;
+  resize: vertical;
+  min-height: 100px;
+  max-height: 200px;
+}
+
+#orion-result-container {
+  margin-top: 15px;
+}
+
+/* Selector de idiomas mejorado */
+#orion-language-selector {
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--orion-gray-light);
+  border-radius: 6px;
+  border: 1px solid var(--orion-gray);
+}
+
+#orion-language-selector label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.language-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.language-buttons button {
+  padding: 8px 12px;
+  background: var(--orion-gray-light);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.language-buttons button:hover {
+  background: var(--orion-gray);
+  border-color: #ccc;
+}
+
+.language-buttons button.selected {
+  background: var(--orion-black);
+  color: var(--orion-white);
+  border-color: var(--orion-black);
+  position: relative;
+}
+
+.language-buttons button.selected::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--orion-green);
+}
+
+/* Vista previa de plantillas con toques de verde */
+#orion-template-preview-content {
+  background-color: var(--orion-gray-light);
+  border: 1px solid var(--orion-gray);
+  border-radius: 6px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  border-left: 3px solid var(--orion-green); /* Borde verde a la izquierda */
+}
+
+/* Botones principales con toques verdes */
+.orion-primary-btn {
+  background-color: var(--orion-black);
+  color: var(--orion-white);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.orion-primary-btn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--orion-green);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.orion-primary-btn:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.orion-primary-btn:hover {
+  background-color: #333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.orion-primary-btn:active {
+  transform: translateY(0);
+}
+
+.orion-secondary-btn {
+  background-color: #f5f5f5;
+  color: var(--orion-black);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orion-secondary-btn:hover {
+  background-color: var(--orion-gray);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-color: var(--orion-green);
+}
+
+/* Lista de plantillas con toques de verde */
+.orion-template-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: var(--orion-gray-light);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.orion-template-item:hover {
+  background-color: var(--orion-gray);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-left: 3px solid var(--orion-green);
+}
+
+.orion-template-item.selected {
+  background-color: #e3e3e3;
+  border-left: 3px solid var(--orion-green);
+}
+
+/* Crear botón de nueva plantilla con énfasis en verde */
+#orion-create-template-btn {
+  background-color: var(--orion-black);
+  position: relative;
+  overflow: hidden;
+}
+
+#orion-create-template-btn span {
+  color: var(--orion-green);
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+#orion-create-template-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 50%, rgba(12, 245, 126, 0.1) 50%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  transition: background-position 0.3s ease;
+}
+
+#orion-create-template-btn:hover::before {
+  background-position: 100% 100%;
+}

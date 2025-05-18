@@ -1,0 +1,131 @@
+<!-- Modal principal de Orion con funcionalidad de plantillas -->
+<div id="orion-modal-overlay">
+  <div id="orion-modal">
+    <div id="orion-header">
+      <img src="https://bryanglen.com/orion/orion-white.png" alt="Orion" />
+      <span id="orion-close">&times;</span>
+    </div>
+    
+    <!-- Vista principal -->
+    <div id="orion-body" class="orion-view" data-view="main">
+      <label>Texto seleccionado:</label>
+      <div id="orion-selected-text-container">
+        <div id="orion-selected-text-preview"></div>
+        <button id="orion-toggle-text" title="Mostrar/ocultar texto completo">
+          <span class="expand-icon">&#9660;</span>
+          <span class="collapse-icon" style="display:none">&#9650;</span>
+        </button>
+      </div>
+
+      <label>Instrucción personalizada (opcional):</label>
+      <input type="text" id="orion-user-instruction" placeholder="Ej: responde con tono empático" />
+
+      <div id="orion-buttons">
+        <button data-type="reply">Generar respuesta</button>
+        <button data-type="rewrite">Reescribir</button>
+        <button id="orion-template-btn">Usar plantilla</button>
+      </div>
+
+      <div id="orion-result-container" style="display:none;">
+        <label>Resultado:</label>
+        <textarea id="orion-result"></textarea>
+        <div id="orion-action-buttons">
+          <button id="orion-copy">Copiar y cerrar</button>
+          <button id="orion-insert">Insertar respuesta</button>
+          <button id="orion-translate" disabled>Traducir</button>
+        </div>
+        
+        <!-- Selector de idioma (oculto por defecto) -->
+        <div id="orion-language-selector" style="display:none;">
+          <label>Selecciona un idioma:</label>
+          <div class="language-buttons">
+            <button data-lang="english">Inglés</button>
+            <button data-lang="spanish">Español</button>
+            <button data-lang="french">Francés</button>
+            <button data-lang="german">Alemán</button>
+            <button data-lang="portuguese">Portugués</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Vista de selección de plantillas -->
+    <div id="orion-templates-view" class="orion-view" data-view="templates" style="display:none;">
+      <div class="orion-view-header">
+        <button id="orion-back-to-main" class="orion-back-btn">
+          <span>&#8592;</span> Volver
+        </button>
+        <h3>Mis Plantillas</h3>
+      </div>
+      
+      <div id="orion-templates-container">
+        <div id="orion-templates-list">
+          <!-- Aquí se cargarán dinámicamente las plantillas del usuario -->
+          <div class="orion-templates-empty">
+            <p>No tienes plantillas guardadas</p>
+          </div>
+        </div>
+        
+        <button id="orion-create-template-btn" class="orion-primary-btn">
+          <span>+</span> Crear nueva plantilla
+        </button>
+      </div>
+    </div>
+    
+    <!-- Vista de creación/edición de plantilla -->
+    <div id="orion-template-edit-view" class="orion-view" data-view="template-edit" style="display:none;">
+      <div class="orion-view-header">
+        <button id="orion-back-to-templates" class="orion-back-btn">
+          <span>&#8592;</span> Volver a plantillas
+        </button>
+        <h3 id="orion-template-edit-title">Nueva Plantilla</h3>
+      </div>
+      
+      <div id="orion-template-edit-form">
+        <div class="orion-form-group">
+          <label for="orion-template-name">Nombre de la plantilla:</label>
+          <input type="text" id="orion-template-name" placeholder="Ej: Respuesta formal" />
+        </div>
+        
+        <div class="orion-form-group">
+          <label for="orion-template-content">Contenido:</label>
+          <textarea id="orion-template-content" placeholder="Escribe aquí tu plantilla. Puedes usar {{texto}} para incluir el texto seleccionado."></textarea>
+        </div>
+        
+        <div id="orion-template-variables-info">
+          <h4>Variables disponibles:</h4>
+          <ul>
+            <li><code>{{texto}}</code> - Inserta el texto seleccionado</li>
+            <li><code>{{fecha}}</code> - Inserta la fecha actual</li>
+            <li><code>{{saludo}}</code> - Inserta un saludo según la hora del día</li>
+          </ul>
+        </div>
+        
+        <div class="orion-form-actions">
+          <button id="orion-template-save" class="orion-primary-btn">Guardar plantilla</button>
+          <button id="orion-template-cancel" class="orion-secondary-btn">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Vista de uso de plantilla -->
+    <div id="orion-template-use-view" class="orion-view" data-view="template-use" style="display:none;">
+      <div class="orion-view-header">
+        <button id="orion-back-from-use" class="orion-back-btn">
+          <span>&#8592;</span> Volver
+        </button>
+        <h3>Usar Plantilla</h3>
+      </div>
+      
+      <div id="orion-template-preview">
+        <label>Vista previa:</label>
+        <div id="orion-template-preview-content"></div>
+      </div>
+      
+      <div class="orion-form-actions">
+        <button id="orion-use-template" class="orion-primary-btn">Aplicar esta plantilla</button>
+        <button id="orion-edit-selected-template" class="orion-secondary-btn">Editar</button>
+      </div>
+    </div>
+  </div>
+</div>
