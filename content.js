@@ -17,42 +17,43 @@ function cleanOrion() {
 }
 
 // Crea ícono flotante
-function showOrionIcon(x, y, selectedText) {
-  // Primero limpiamos cualquier ícono existente
+function showOrionIcon(selectedText) {
   const existingIcon = document.getElementById("orion-float-icon");
   if (existingIcon) existingIcon.remove();
 
-  orionIcon = document.createElement("img");
+  const orionIcon = document.createElement("img");
   orionIcon.src = chrome.runtime.getURL("icon.png");
   orionIcon.alt = "Orion";
   orionIcon.id = "orion-float-icon";
 
   Object.assign(orionIcon.style, {
-    position: "absolute",
-    top: `${y + 10}px`,
-    left: `${x + 10}px`,
-    width: "36px",
-    height: "36px",
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "40px",
+    height: "40px",
     cursor: "pointer",
-    zIndex: "1000000",
+    zIndex: "9999999",
     borderRadius: "50%",
     boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
     transition: "transform 0.2s ease-in-out"
   });
 
-  // Al hacer clic en el ícono, mostrar el modal
   orionIcon.addEventListener('click', (e) => {
     e.stopPropagation();
     showOrionModal(selectedText);
   });
 
   document.body.appendChild(orionIcon);
-  console.log("✅ Ícono Orion mostrado en:", x, y);
 }
 
 // Mostrar el modal completo
 async function showOrionModal(text) {
   try {
+    // Eliminar el ícono flotante si existe
+    const existingIcon = document.getElementById("orion-float-icon");
+    if (existingIcon) existingIcon.remove();
     console.log("🚀 Mostrando modal con texto:", text);
     
     // Limpiamos cualquier modal existente
@@ -320,7 +321,7 @@ async function loadUserTemplates() {
           return;
         }
         
-        const userId = data.orionUser.id;
+        const userId = data.orionUser.orion_user_id;
         console.log("ID de usuario para cargar plantillas:", userId);
         
         try {
@@ -693,6 +694,28 @@ function initModal(selectedText) {
 
         if (resultArea) {
           resultArea.value = data.result || 'Error generando respuesta';
+          // Guardar log en el backend
+chrome.storage.local.get("orionUser", async (dataUser) => {
+  if (dataUser.orionUser?.orion_user_id) {
+    try {
+      await fetch('https://orion-production-5768.up.railway.app/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // 🔑 Necesario para que req.user esté disponible
+        body: JSON.stringify({
+          action: type,                       // 'generate', 'rewrite', etc.
+          input_text: text,                   // el texto original
+          output_text: data.result,           // lo generado
+          source_url: window.location.href    // para saber de dónde vino
+        })
+      });
+      console.log("✅ Log registrado correctamente");
+    } catch (err) {
+      console.warn("⚠️ Error al enviar el log:", err);
+    }
+  }
+});
+
           resultArea.removeAttribute('readonly'); // Hacer editable
           autoResizeTextarea(resultArea);
           
@@ -861,14 +884,9 @@ document.addEventListener("mouseup", (e) => {
 
       if (selectedText) {
         try {
-          const range = selection.getRangeAt(0);
-          const rect = range.getBoundingClientRect();
-          const x = rect.right + window.scrollX;
-          const y = rect.top + window.scrollY;
-
-          showOrionIcon(x, y, selectedText);
+          showOrionIcon(selectedText);
         } catch (err) {
-          console.error("❌ Error al obtener posición:", err);
+          console.error("❌ Error al mostrar el ícono Orion:", err);
         }
       } else {
         const existingIcon = document.getElementById("orion-float-icon");
