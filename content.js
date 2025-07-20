@@ -218,6 +218,17 @@ function insertTextIntoField(field, text) {
   }
 }
 
+// Función helper para detectar plataforma
+function detectPlatform() {
+  if (window.location.hostname.includes('mail.google.com')) return 'gmail';
+  if (window.location.hostname.includes('outlook')) return 'outlook';
+  if (window.location.hostname.includes('web.whatsapp.com')) return 'whatsapp';
+  if (window.location.hostname.includes('linkedin.com')) return 'linkedin';
+  if (window.location.hostname.includes('facebook.com')) return 'facebook';
+  if (window.location.hostname.includes('slack.com')) return 'slack';
+  return 'unknown';
+}
+
 // FUNCIONES DE PLANTILLAS
 
 // Función para inicializar la funcionalidad de plantillas
@@ -314,7 +325,7 @@ async function loadUserTemplates() {
     return new Promise((resolve) => {
       chrome.storage.local.get("orionUser", async (data) => {
         console.log("Datos del usuario:", data.orionUser);
-        if (!data.orionUser || !data.orionUser.id) {
+        if (!data.orionUser || !data.orionUser.orion_user_id) {
           console.log("⚠️ Usuario no autenticado, no se pueden cargar plantillas");
           showEmptyTemplates("Inicia sesión para ver tus plantillas");
           resolve();
@@ -330,9 +341,17 @@ async function loadUserTemplates() {
           console.log("URL de solicitud:", url);
           
           const response = await fetch(url, {
-            credentials: 'include' 
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            }
           });
+          
           console.log("Status de respuesta:", response.status);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
           
           const responseData = await response.json();
           console.log("Respuesta de plantillas:", responseData);
@@ -341,9 +360,6 @@ async function loadUserTemplates() {
             templates = responseData.templates || [];
             console.log("Plantillas cargadas:", templates.length);
             renderTemplatesList();
-          } else {
-            console.error("❌ Error cargando plantillas:", responseData.error);
-            showEmptyTemplates("Error al cargar plantillas");
           }
           resolve();
         } catch (err) {
@@ -491,16 +507,14 @@ async function saveTemplate() {
   try {
     // Obtener el usuario actual
     chrome.storage.local.get("orionUser", async (data) => {
-      if (!data.orionUser || !data.orionUser.id) {
+      if (!data.orionUser || !data.orionUser.orion_user_id) {
         alert('Debes iniciar sesión para guardar plantillas');
         return;
       }
       
-      const userId = data.orionUser.id;
-      
       // Construir el objeto de plantilla
       const templateData = {
-        user_id: userId,
+        user_id: data.orionUser.orion_user_id,
         title: title,
         content: content
       };
@@ -542,22 +556,30 @@ async function deleteTemplate(templateId) {
   }
   
   try {
-    // Hacer la solicitud al backend
-    const response = await fetch(`https://orion-production-5768.up.railway.app/templates/${templateId}`, {
-      method: 'DELETE',
-      credentials: 'include'
+    // Obtener el usuario actual
+    chrome.storage.local.get("orionUser", async (data) => {
+      if (!data.orionUser || !data.orionUser.orion_user_id) {
+        alert('Debes iniciar sesión para eliminar plantillas');
+        return;
+      }
+      
+      // Hacer la solicitud al backend
+      const response = await fetch(`https://orion-production-5768.up.railway.app/templates/${templateId}?user_id=${data.orionUser.orion_user_id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (response.ok) {
+        console.log("✅ Plantilla eliminada correctamente");
+        // Actualizar la lista de plantillas
+        templates = templates.filter(t => t.id !== templateId);
+        renderTemplatesList();
+      } else {
+        const responseData = await response.json();
+        console.error("❌ Error eliminando plantilla:", responseData.error);
+        alert(`Error al eliminar la plantilla: ${responseData.error || 'Intenta nuevamente'}`);
+      }
     });
-    
-    if (response.ok) {
-      console.log("✅ Plantilla eliminada correctamente");
-      // Actualizar la lista de plantillas
-      templates = templates.filter(t => t.id !== templateId);
-      renderTemplatesList();
-    } else {
-      const data = await response.json();
-      console.error("❌ Error eliminando plantilla:", data.error);
-      alert(`Error al eliminar la plantilla: ${data.error || 'Intenta nuevamente'}`);
-    }
   } catch (error) {
     console.error("❌ Error en deleteTemplate:", error);
     alert('Error de conexión al eliminar la plantilla');
@@ -570,6 +592,12 @@ function applySelectedTemplate() {
   if (!template) return;
   
   const processedText = processTemplate(template.content, currentSelectedText);
+  
+  // 📊 LOG: Registrar uso de plantilla
+  logUserAction('USE_TEMPLATE', {
+    inputText: currentSelectedText,
+    outputText: processedText
+  });
   
   // Mostrar el resultado en la vista principal
   const resultArea = document.getElementById('orion-result');
@@ -688,46 +716,40 @@ function initModal(selectedText) {
       }
 
       try {
-        const response = await fetch('https://orion-production-5768.up.railway.app/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type, text, userInstruction })
-        });
+        chrome.storage.local.get("orionUser", async (userData) => {
+          const response = await fetch('https://orion-production-5768.up.railway.app/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              type, 
+              text, 
+              userInstruction,
+              orion_user_id: userData.orionUser?.orion_user_id
+            })
+          });
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (resultArea) {
-          resultArea.value = data.result || 'Error generando respuesta';
-          // Guardar log en el backend
-chrome.storage.local.get("orionUser", async (dataUser) => {
-  if (dataUser.orionUser?.orion_user_id) {
-    try {
-      await fetch('https://orion-production-5768.up.railway.app/log', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // 🔑 Necesario para que req.user esté disponible
-        body: JSON.stringify({
-          action: type,                       // 'generate', 'rewrite', etc.
-          input_text: text,                   // el texto original
-          output_text: data.result,           // lo generado
-          source_url: window.location.href    // para saber de dónde vino
-        })
-      });
-      console.log("✅ Log registrado correctamente");
-    } catch (err) {
-      console.warn("⚠️ Error al enviar el log:", err);
-    }
-  }
-});
+          if (resultArea) {
+            resultArea.value = data.result || 'Error generando respuesta';
+            
+            // 📊 LOG: Registrar generación de respuesta (el log del backend ya se hace, pero podemos agregar metadata)
+            if (data.result) {
+              logUserAction(type, {
+                inputText: text,
+                outputText: data.result
+              });
+            }
 
-          resultArea.removeAttribute('readonly'); // Hacer editable
-          autoResizeTextarea(resultArea);
-          
-          // Habilitar el botón de traducir si hay contenido
-          if (translateBtn) {
-            translateBtn.disabled = !resultArea.value.trim();
+            resultArea.removeAttribute('readonly'); // Hacer editable
+            autoResizeTextarea(resultArea);
+            
+            // Habilitar el botón de traducir si hay contenido
+            if (translateBtn) {
+              translateBtn.disabled = !resultArea.value.trim();
+            }
           }
-        }
+        });
       } catch (error) {
         console.error("❌ Error en la petición:", error);
         if (resultArea) {
@@ -748,6 +770,12 @@ chrome.storage.local.get("orionUser", async (dataUser) => {
       try {
         await navigator.clipboard.writeText(text);
         console.log("✅ Texto copiado al portapapeles");
+        
+        // 📊 LOG: Registrar acción de copiar
+        await logUserAction('COPY_RESULT', {
+          outputText: text
+        });
+        
         closeModal();
       } catch (err) {
         console.error("❌ Error al copiar:", err);
@@ -767,6 +795,12 @@ chrome.storage.local.get("orionUser", async (dataUser) => {
         const success = insertTextIntoField(inputField, text);
         if (success) {
           console.log("✅ Texto insertado en el campo");
+          
+          // 📊 LOG: Registrar acción de insertar
+          logUserAction('INSERT_RESULT', {
+            outputText: text
+          });
+          
           closeModal();
         } else {
           alert('No se pudo insertar el texto en el campo');
@@ -813,22 +847,34 @@ chrome.storage.local.get("orionUser", async (dataUser) => {
       }
       
       try {
-        const response = await fetch('https://orion-production-5768.up.railway.app/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'translate',
-            text: textToTranslate,
-            userInstruction: language
-          })
-        });
+        chrome.storage.local.get("orionUser", async (userData) => {
+          const response = await fetch('https://orion-production-5768.up.railway.app/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'translate',
+              text: textToTranslate,
+              userInstruction: language,
+              orion_user_id: userData.orionUser?.orion_user_id
+            })
+          });
 
-        const data = await response.json();
-        
-        if (resultArea) {
-          resultArea.value = data.result || `Error traduciendo al ${language}`;
-          autoResizeTextarea(resultArea);
-        }
+          const data = await response.json();
+          
+          if (resultArea) {
+            resultArea.value = data.result || `Error traduciendo al ${language}`;
+            
+            // 📊 LOG: Registrar traducción (el log del backend ya se hace, pero podemos agregar metadata)
+            if (data.result) {
+              logUserAction('translate', {
+                inputText: textToTranslate,
+                outputText: data.result
+              });
+            }
+            
+            autoResizeTextarea(resultArea);
+          }
+        });
       } catch (error) {
         console.error("❌ Error en la traducción:", error);
         if (resultArea) {
@@ -908,3 +954,34 @@ document.addEventListener("selectionchange", () => {
     if (existingIcon) existingIcon.remove();
   }
 });
+
+// LOG SECTION //
+
+// Función centralizada para enviar logs al backend
+async function logUserAction(actionType, data = {}) {
+  try {
+    chrome.storage.local.get("orionUser", async (userData) => {
+      if (!userData.orionUser?.orion_user_id) return;
+      
+      const logData = {
+        orion_user_id: userData.orionUser.orion_user_id,
+        user_id: userData.orionUser.id, // Google ID opcional
+        action_type: actionType,
+        input_text: data.inputText || null,
+        output_text: data.outputText || null,
+        source_url: window.location.href
+      };
+      
+      await fetch('https://orion-production-5768.up.railway.app/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(logData)
+      });
+      
+      console.log(`📊 Log enviado: ${actionType}`);
+    });
+  } catch (err) {
+    console.warn('⚠️ Error enviando log:', err);
+  }
+}
