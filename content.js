@@ -329,7 +329,9 @@ async function loadUserTemplates() {
           const url = `https://orion-production-5768.up.railway.app/templates?userId=${userId}`;
           console.log("URL de solicitud:", url);
           
-          const response = await fetch(url);
+          const response = await fetch(url, {
+            credentials: 'include' 
+          });
           console.log("Status de respuesta:", response.status);
           
           const responseData = await response.json();
@@ -512,6 +514,7 @@ async function saveTemplate() {
       const response = await fetch('https://orion-production-5768.up.railway.app/templates', {
         method: selectedTemplateId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', 
         body: JSON.stringify(templateData)
       });
       
@@ -541,7 +544,8 @@ async function deleteTemplate(templateId) {
   try {
     // Hacer la solicitud al backend
     const response = await fetch(`https://orion-production-5768.up.railway.app/templates/${templateId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      credentials: 'include'
     });
     
     if (response.ok) {

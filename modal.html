@@ -1,8 +1,9 @@
-<!-- Modal principal de Orion con funcionalidad de plantillas -->
+<!-- Modal principal de Orion con funcionalidad de plantillas mejorada -->
 <div id="orion-modal-overlay">
   <div id="orion-modal">
     <div id="orion-header">
       <img src="https://orion.bryanglen.com/wp-content/uploads/2025/07/orion-white.png" alt="Orion" />
+      <h2>Orion AI Assistant</h2>
       <span id="orion-close">&times;</span>
     </div>
     
@@ -53,7 +54,7 @@
     <div id="orion-templates-view" class="orion-view" data-view="templates" style="display:none;">
       <div class="orion-view-header">
         <button id="orion-back-to-main" class="orion-back-btn">
-          <span>&#8592;</span> Volver
+          <span>←</span> Volver
         </button>
         <h3>Mis Plantillas</h3>
       </div>
@@ -62,7 +63,8 @@
         <div id="orion-templates-list">
           <!-- Aquí se cargarán dinámicamente las plantillas del usuario -->
           <div class="orion-templates-empty">
-            <p>No tienes plantillas guardadas</p>
+            <p>📝 No tienes plantillas guardadas</p>
+            <p>Crea tu primera plantilla para responder más rápido</p>
           </div>
         </div>
         
@@ -76,34 +78,26 @@
     <div id="orion-template-edit-view" class="orion-view" data-view="template-edit" style="display:none;">
       <div class="orion-view-header">
         <button id="orion-back-to-templates" class="orion-back-btn">
-          <span>&#8592;</span> Volver a plantillas
+          <span>←</span> Volver a plantillas
         </button>
         <h3 id="orion-template-edit-title">Nueva Plantilla</h3>
       </div>
       
       <div id="orion-template-edit-form">
         <div class="orion-form-group">
-          <label for="orion-template-name">Nombre de la plantilla:</label>
+          <label for="orion-template-name">Nombre de la plantilla</label>
           <input type="text" id="orion-template-name" placeholder="Ej: Respuesta formal" />
         </div>
         
         <div class="orion-form-group">
-          <label for="orion-template-content">Contenido:</label>
-          <textarea id="orion-template-content" placeholder="Escribe aquí tu plantilla. Puedes usar {{texto}} para incluir el texto seleccionado."></textarea>
-        </div>
-        
-        <div id="orion-template-variables-info">
-          <h4>Variables disponibles:</h4>
-          <ul>
-            <li><code>{{texto}}</code> - Inserta el texto seleccionado</li>
-            <li><code>{{fecha}}</code> - Inserta la fecha actual</li>
-            <li><code>{{saludo}}</code> - Inserta un saludo según la hora del día</li>
-          </ul>
+          <label for="orion-template-content">Contenido de la plantilla</label>
+          <textarea id="orion-template-content" placeholder="Escribe aquí el contenido de tu plantilla..."></textarea>
         </div>
         
         <div class="orion-form-actions">
-          <button id="orion-template-save" class="orion-primary-btn">Guardar plantilla</button>
-          <button id="orion-template-cancel" class="orion-secondary-btn">Cancelar</button>
+          <button id="orion-template-save" class="orion-primary-btn">
+            💾 Guardar plantilla
+          </button>
         </div>
       </div>
     </div>
@@ -112,19 +106,23 @@
     <div id="orion-template-use-view" class="orion-view" data-view="template-use" style="display:none;">
       <div class="orion-view-header">
         <button id="orion-back-from-use" class="orion-back-btn">
-          <span>&#8592;</span> Volver
+          <span>←</span> Volver
         </button>
         <h3>Usar Plantilla</h3>
       </div>
       
       <div id="orion-template-preview">
-        <label>Vista previa:</label>
+        <label>Vista previa</label>
         <div id="orion-template-preview-content"></div>
       </div>
       
       <div class="orion-form-actions">
-        <button id="orion-use-template" class="orion-primary-btn">Aplicar esta plantilla</button>
-        <button id="orion-edit-selected-template" class="orion-secondary-btn">Editar</button>
+        <button id="orion-use-template" class="orion-primary-btn">
+          ✨ Aplicar esta plantilla
+        </button>
+        <button id="orion-edit-selected-template" class="orion-secondary-btn">
+          ✏️ Editar
+        </button>
       </div>
     </div>
   </div>
